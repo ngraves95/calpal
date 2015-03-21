@@ -11,11 +11,13 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.result.DataReadResult;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,48 +27,48 @@ import java.util.concurrent.TimeUnit;
  */
 public class CalorieTask extends AsyncTask<Void, Void, Integer> {
 
-    private Context context;
-    private Calendar date;
+    private GoogleApiClient mClient;
+    private long startTime;
+    private long endTime;
 
-    public CalorieTask(Context context, Calendar date) {
-        this.context = context;
-        this.date = date;
+    // TODO: more accurate conversion
+    public static final int CALORIES_PER_STEP = 20;
+
+    public CalorieTask(GoogleApiClient mClient, long startTime, long endTime) {
+        this.mClient = mClient;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     protected Integer doInBackground(Void... input) {
-        Calendar startCal = Calendar.getInstance();
-        startCal.set(
-                date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
-                0,0,0
-        );
-        Calendar endCal = Calendar.getInstance();
-        endCal.set(
-                date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
-                24,0,0
-        );
+        System.out.println("Getting Calorie data....");
 
-        long startTime = startCal.getTimeInMillis();
-        long endTime = endCal.getTimeInMillis();
-
-        GoogleApiClient client = new GoogleApiClient.Builder(context)
-                .addApi(Fitness.HISTORY_API)
+        DataReadRequest readRequest = new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                .bucketByTime(1, TimeUnit.DAYS)
                 .build();
 
-        PendingResult<DataReadResult> pendingResult = Fitness.HistoryApi.readData(
-                client,
-                new DataReadRequest.Builder()
-                    .read(DataType.TYPE_CALORIES_EXPENDED)
-                    .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                    .build());
+        DataReadResult readResult = Fitness.HistoryApi.readData(
+                mClient, readRequest
+        ).await(1, TimeUnit.MINUTES);
 
-        DataReadResult readDataResult = pendingResult.await();
-        DataSet dataSet = readDataResult.getDataSet(DataType.TYPE_CALORIES_EXPENDED);
+        int steps = 0;
+        for (DataPoint dp : readResult.getBuckets().get(0).getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA).getDataPoints()) {
+            for(Field field : dp.getDataType().getFields()) {
+                if (field.getName().toLowerCase().equals("steps")) {
+                    steps += dp.getValue(field).asInt();
+                }
+            }
 
-        for (DataPoint p : dataSet.getDataPoints()) {
-            System.out.println(p.toString());
         }
 
-        return new Integer(0);
+        int calories = steps / CALORIES_PER_STEP;
+
+        System.out.println("Counted " + steps + " steps which burns " + calories + " calories.");
+
+        return calories;
+
     }
 
 }
