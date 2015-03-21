@@ -27,6 +27,7 @@ import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -105,9 +106,22 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
     }
 
     @Override
+    protected void onPreExecute() {
+        destination.setText("Calculating...");
+    }
+
+    @Override
     protected void onPostExecute(Integer calsBurned) {
         int currentCalCount = Integer.parseInt(destination.getText().toString());
-        currentCalCount -= calsBurned;
+        currentCalCount = -calsBurned;
+        FoodModel model = new FoodModel(mClient.getContext());
+        try {
+            model.open();
+
+            currentCalCount += model.getCalorieCountAtDate(Util.now());
+        } catch (SQLException e) {
+
+        }
         destination.setText(currentCalCount + "");
     }
 
