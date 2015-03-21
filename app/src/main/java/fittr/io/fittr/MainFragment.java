@@ -4,6 +4,7 @@ package fittr.io.fittr;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     ListView mealsData;
+    List<String> items;
     ArrayAdapter<String> mealsDataAdapter;
 
     /**
@@ -51,12 +53,9 @@ public class MainFragment extends Fragment {
         this.context = context;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        mealsData = (ListView) view.findViewById(R.id.mealsData);
+    private void updateMealData() {
         FoodModel model = new FoodModel(context);
-        List<String> items;
-        try  {
+        try {
             model.open();
             items = model.getFoodsAtDate(Calendar.getInstance());
 
@@ -72,15 +71,43 @@ public class MainFragment extends Fragment {
         } catch (SQLException e) {
             System.out.println("Something went wrong...");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        mealsData = (ListView) view.findViewById(R.id.mealsData);
+        updateMealData();
+
 
     }
 
     @Override
     public void onResume() {
+        super.onResume();
+        //updateMealData();
         if (mealsDataAdapter != null) {
-            mealsDataAdapter.notifyDataSetChanged();
+            FoodModel model = new FoodModel(context);
+            try {
+
+                model.open();
+                items = model.getFoodsAtDate(Calendar.getInstance());
+                mealsDataAdapter.clear();
+                mealsDataAdapter.addAll(items);
+                mealsDataAdapter.notifyDataSetChanged();
+                System.out.println("Main fragment resuming");
+                model.close();
+            } catch (SQLException s) {
+                // Eat it
+            }
         }
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        onResume();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,4 +115,5 @@ public class MainFragment extends Fragment {
 
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
+
 }

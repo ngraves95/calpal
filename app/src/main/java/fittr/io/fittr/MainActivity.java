@@ -28,8 +28,10 @@ public class MainActivity extends ActionBarActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    FragmentManager fm;
 
     private Fragment[] pages = { MainFragment.newInstance(0, this), SearchFragment.newInstance(1, this) };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,9 @@ public class MainActivity extends ActionBarActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), pages);
+
+        fm = getSupportFragmentManager();
+        mSectionsPagerAdapter = new SectionsPagerAdapter(fm, pages);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -54,6 +58,24 @@ public class MainActivity extends ActionBarActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                pages[position].onResume();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pages[position].onResume();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // Do nothing?
+            }
+        }
+        );
+
     }
 
 
@@ -102,7 +124,10 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public Fragment getItem(int position) {
             // Gets the fragment at the given position
-            return pages[position];
+            Fragment frag = pages[position];
+            frag.onResume();
+            System.out.println("Getting a new fragment");
+            return frag;
         }
 
         @Override

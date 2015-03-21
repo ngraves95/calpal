@@ -78,14 +78,14 @@ public class FoodModel {
         long minTimeStamp = minTime.getTimeInMillis() / 1000L;
         long maxTimeStamp = maxTime.getTimeInMillis() / 1000L;
         Cursor cursor = db.query(FittrSQLiteHelper.TABLE_FOODS, allColumns,
-                "timestamp >= " + minTimeStamp + " AND timestamp <= " + maxTimeStamp,
+                /*"timestamp >= " + minTimeStamp + " AND timestamp <= " + maxTimeStamp*/ null,
                 null, null, null, null
         );
 
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            String food = cursor.getString(4);
+            String food = cursor.getString(4) + "\t" + cursor.getString(2);
             out.add(food);
             cursor.moveToNext();
         }
