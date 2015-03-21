@@ -2,14 +2,13 @@ package fittr.io.fittr;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,6 +30,7 @@ public class MainFragment extends Fragment {
     ListView mealsData;
     List<String> items;
     ArrayAdapter<String> mealsDataAdapter;
+    Button addFoodButton;
 
     /**
      * The fragment argument representing the section number for this
@@ -83,10 +83,17 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mealsData = (ListView) view.findViewById(R.id.mealsData);
         netCaloriesValue = (TextView) view.findViewById(R.id.netCalorieValue);
+        netCaloriesText = (TextView) view.findViewById(R.id.netCalories);
+        addFoodButton = (Button) view.findViewById(R.id.addFoodButton);
+        MainActivity act = (MainActivity) getActivity();
+        addFoodButton.setOnClickListener(new SwapPageListener(act.mViewPager));
+
         CalorieTextWatcher cw = new CalorieTextWatcher(netCaloriesText, netCaloriesValue);
         netCaloriesValue.addTextChangedListener(cw);
         cw.colorText();
+
         updateMealData();
+
 
 
     }

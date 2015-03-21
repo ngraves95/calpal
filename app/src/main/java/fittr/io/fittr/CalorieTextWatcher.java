@@ -26,12 +26,20 @@ public class CalorieTextWatcher implements TextWatcher{
         if (source != null && value != null) {
             System.out.println("Coloring text");
             int calCount = Integer.parseInt(value.getText().toString());
-            if (calCount > 0) {
+            if (calCount > 2000) {
                 source.setText("Net Calories Consumed: ");
-                value.setTextColor(surplus);
+                source.setBackgroundColor(surplus);
+                value.setBackgroundColor(surplus);
+
             } else {
-                source.setText("Net Calories Burned: ");
-                value.setTextColor(deficiency);
+                if (calCount < 0) {
+                    source.setText("Net Calories Burned: ");
+                } else {
+                    source.setText("Net Calories Consumed: ");
+                }
+
+                source.setBackgroundColor(deficiency);
+                value.setBackgroundColor(deficiency);
             }
         }
 

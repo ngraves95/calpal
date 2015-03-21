@@ -60,12 +60,7 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String query = (String) adapterView.getItemAtPosition(i);
-
-        if (adapterView.getAdapter().getCount() == 1) {
-            FoodModel model = new FoodModel(context);
-
-
-        }
+        source.setText(query);
         search(query, adapterView);
     }
 }
