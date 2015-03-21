@@ -2,6 +2,7 @@ package fittr.io.fittr;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -22,6 +24,10 @@ import java.util.List;
  */
 public class MainFragment extends Fragment {
 
+
+
+    TextView netCaloriesText;
+    TextView netCaloriesValue;
     ListView mealsData;
     List<String> items;
     ArrayAdapter<String> mealsDataAdapter;
@@ -76,6 +82,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mealsData = (ListView) view.findViewById(R.id.mealsData);
+        netCaloriesValue = (TextView) view.findViewById(R.id.netCalorieValue);
+        CalorieTextWatcher cw = new CalorieTextWatcher(netCaloriesText, netCaloriesValue);
+        netCaloriesValue.addTextChangedListener(cw);
+        cw.colorText();
         updateMealData();
 
 
@@ -94,12 +104,19 @@ public class MainFragment extends Fragment {
                 mealsDataAdapter.clear();
                 mealsDataAdapter.addAll(items);
                 mealsDataAdapter.notifyDataSetChanged();
+
+                int calCount = model.getCalorieCountAtDate(Calendar.getInstance());
+
+                netCaloriesValue.setText(calCount + "");
+
                 System.out.println("Main fragment resuming");
                 model.close();
             } catch (SQLException s) {
                 // Eat it
             }
         }
+
+
     }
 
     @Override
