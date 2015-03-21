@@ -64,8 +64,10 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
                     steps += dp.getValue(field).asInt();
                 }
             }
-
         }
+
+       // readRequest = new DataReadRequest.Builder()
+      //          .aggregate(DataType.TYPE_)
 
         int calories = steps / CALORIES_PER_STEP;
 

@@ -37,7 +37,7 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
 
     // TODO: remove this from git
     private static String appid = "G5Q47V-QGJ6JYKHUP";
-    private static final Pattern GRAMS_PATTERN = Pattern.compile("serving size\\s+\\(?([0-9]+) g\\)?");
+    private static final Pattern GRAMS_PATTERN = Pattern.compile("\\(?([0-9]+) g\\)?$", Pattern.MULTILINE);
     private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories\\s+([0-9]+)");
     private Button adder;
     private ListView destination;
@@ -128,6 +128,7 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                                         Matcher gramMatcher = GRAMS_PATTERN.matcher(plaintext);
                                         Matcher calsMatcher = CALORIES_PATTERN.matcher(plaintext);
                                         if (gramMatcher.find() && calsMatcher.find()) {
+                                            System.out.println(gramMatcher.group(1));
                                             grams = Integer.parseInt(gramMatcher.group(1));
                                             System.out.println("Grams: " + grams.toString());
                                             calories = Integer.parseInt(calsMatcher.group(1));
