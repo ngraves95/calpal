@@ -1,8 +1,11 @@
 package fittr.io.fittr;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -34,12 +41,13 @@ public class MainActivity extends ActionBarActivity {
      */
     ViewPager mViewPager;
 
+    ListView searchResultView;
+    Button searchButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -49,6 +57,21 @@ public class MainActivity extends ActionBarActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        /*
+         * Set up the listeners for searching.
+         */
+        //setContentView(R.layout.search);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        searchResultView = (ListView) findViewById(R.id.searchResults);
+        EditText query = (EditText) findViewById(R.id.foodQuery);
+        searchButton.setOnClickListener(new SearchListener(
+                this,
+                searchResultView,
+                query
+                )
+        );
+
+        //setContentView(R.layout.activity_main);
     }
 
 
@@ -73,6 +96,7 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
     private abstract class FragmentCreator {
 
