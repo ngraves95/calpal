@@ -82,6 +82,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mealsData = (ListView) view.findViewById(R.id.mealsData);
+
+
         netCaloriesValue = (TextView) view.findViewById(R.id.netCalorieValue);
         netCaloriesText = (TextView) view.findViewById(R.id.netCalories);
         addFoodButton = (Button) view.findViewById(R.id.addFoodButton);
@@ -93,9 +95,7 @@ public class MainFragment extends Fragment {
         cw.colorText();
 
         updateMealData();
-
-
-
+        mealsData.setOnItemLongClickListener(new DeleteListener(context, mealsData, items,netCaloriesValue));
     }
 
     @Override
