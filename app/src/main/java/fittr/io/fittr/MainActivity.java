@@ -73,6 +73,16 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private abstract class FragmentCreator {
+
+        /**
+         * Returns the fragment associated with this instance of FragmentCreator.
+         * @return
+         */
+        public abstract Fragment getFragment(int position);
+
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -80,25 +90,47 @@ public class MainActivity extends ActionBarActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private int numPages;
+
+        /**
+         * Contains a FragmentCreator (aka an overly verbose function pointer)
+         * for each page.
+         */
+        private FragmentCreator[] pages = {
+                new FragmentCreator() {
+                    @Override
+                    public Fragment getFragment(int position) {
+                        return MainFragment.newInstance(position);
+                    }
+                },
+
+                new FragmentCreator() {
+                    @Override
+                    public Fragment getFragment(int position) {
+                        return SearchFragment.newInstance(position);
+                    }
+                }
+        };
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            numPages = pages.length;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == 1) {
-                return SearchFragment.newInstance(position);
-            }
-
-            return PlaceholderFragment.newInstance(position);
+//            if (position == 1) {
+//                return SearchFragment.newInstance(position);
+//            }
+//
+            return pages[position].getFragment(position);
         }
 
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return numPages;
         }
 
         @Override
@@ -117,30 +149,28 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * Main fragment containing a view of the activities and meals.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class MainFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private static int sectionNumber;
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment.sectionNumber = sectionNumber;
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static MainFragment newInstance(int sectionNumber) {
+            MainFragment fragment = new MainFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        public MainFragment() {
         }
 
         @Override
