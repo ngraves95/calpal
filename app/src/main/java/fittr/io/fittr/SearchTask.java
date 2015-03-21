@@ -112,6 +112,9 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                 System.out.println("Printing assumptions");
                 for (WAAssumption assumption : queryResult.getAssumptions()) {
                     System.out.println("----------");
+                    if (assumption.getType().toLowerCase().equals("clash")) {
+                        continue; // skip clashes
+                    }
                     for (String d : assumption.getDescriptions()) {
                         System.out.println(d);
                         suggestions.add(d);
