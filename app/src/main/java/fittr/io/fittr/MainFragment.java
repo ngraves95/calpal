@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class MainFragment extends Fragment {
 
-
-
     TextView netCaloriesText;
     TextView netCaloriesValue;
     ListView mealsData;
@@ -82,8 +80,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mealsData = (ListView) view.findViewById(R.id.mealsData);
-
-
         netCaloriesValue = (TextView) view.findViewById(R.id.netCalorieValue);
         netCaloriesText = (TextView) view.findViewById(R.id.netCalories);
         addFoodButton = (Button) view.findViewById(R.id.addFoodButton);
