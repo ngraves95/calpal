@@ -1,7 +1,9 @@
 package fittr.io.fittr;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,8 +39,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // test
-        new SearchTask().execute("pepperoni pizza");
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -90,8 +91,6 @@ public class MainActivity extends ActionBarActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private int numPages;
-
         /**
          * Contains a FragmentCreator (aka an overly verbose function pointer)
          * for each page.
@@ -114,23 +113,18 @@ public class MainActivity extends ActionBarActivity {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            numPages = pages.length;
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-//            if (position == 1) {
-//                return SearchFragment.newInstance(position);
-//            }
-//
+            // Gets the fragment at the given position
             return pages[position].getFragment(position);
         }
 
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return numPages;
+            return pages.length;
         }
 
         @Override
