@@ -121,12 +121,14 @@ public class MainActivity extends ActionBarActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private static int sectionNumber;
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment.sectionNumber = sectionNumber;
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -140,7 +142,14 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView;
+
+            if (sectionNumber > 2) {
+                rootView = inflater.inflate(R.layout.search, container, false);
+            } else {
+                rootView= inflater.inflate(R.layout.fragment_main, container, false);
+            }
+
             return rootView;
         }
     }
