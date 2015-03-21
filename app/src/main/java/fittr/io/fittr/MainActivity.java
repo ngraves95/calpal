@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -203,7 +204,7 @@ public class MainActivity extends ActionBarActivity {
                                 long startTime = Util.dayStartMillis();
                                 long endTime = Util.dayEndmillis();
 
-                                CalorieTask task = new CalorieTask(mClient, startTime, endTime);
+                                CalorieTask task = new CalorieTask(mClient, startTime, endTime, (TextView)findViewById(R.id.netCalorieValue));
                                 task.execute();
                             }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -34,10 +35,13 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
     // TODO: more accurate conversion
     public static final int CALORIES_PER_STEP = 20;
 
-    public CalorieTask(GoogleApiClient mClient, long startTime, long endTime) {
+    private TextView destination;
+
+    public CalorieTask(GoogleApiClient mClient, long startTime, long endTime, TextView destination) {
         this.mClient = mClient;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.destination = destination;
     }
 
     protected Integer doInBackground(Void... input) {
@@ -71,4 +75,10 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
 
     }
 
+    @Override
+    protected void onPostExecute(Integer calsBurned) {
+        int currentCalCount = Integer.parseInt(destination.getText().toString());
+        currentCalCount -= calsBurned;
+        destination.setText(currentCalCount + "");
+    }
 }

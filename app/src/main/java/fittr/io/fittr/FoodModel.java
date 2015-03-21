@@ -91,6 +91,37 @@ public class FoodModel {
         }
         cursor.close();
         return out;
+    }
 
+    public int getCalorieCountAtDate(Calendar date) {
+        Calendar minTime = Calendar.getInstance();
+        minTime.set(
+                date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
+                0, 0, 0
+        );
+        Calendar maxTime = Calendar.getInstance();
+        maxTime.set(
+                date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
+                24, 0, 0
+        );
+
+        int calorieTotal = 0;
+
+        long minTimeStamp = minTime.getTimeInMillis() / 1000L;
+        long maxTimeStamp = maxTime.getTimeInMillis() / 1000L;
+        Cursor cursor = db.query(FittrSQLiteHelper.TABLE_FOODS, allColumns,
+                /*"timestamp >= " + minTimeStamp + " AND timestamp <= " + maxTimeStamp*/ null,
+                null, null, null, null
+        );
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            String calories = cursor.getString(2);
+            calorieTotal += Integer.parseInt(calories);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return calorieTotal;
     }
 }
