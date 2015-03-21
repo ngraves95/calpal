@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
         /*
          * Set up the listeners for searching.
          */
-        //setContentView(R.layout.search);
+        setContentView(R.layout.search);
         searchButton = (Button) findViewById(R.id.searchButton);
         searchResultView = (ListView) findViewById(R.id.searchResults);
         EditText query = (EditText) findViewById(R.id.foodQuery);
@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
                 )
         );
 
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_main);
     }
 
 
