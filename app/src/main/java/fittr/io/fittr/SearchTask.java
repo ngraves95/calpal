@@ -2,10 +2,13 @@ package fittr.io.fittr;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -34,17 +37,20 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
 
     // TODO: remove this from git
     private static String appid = "G5Q47V-QGJ6JYKHUP";
-    private static final Pattern GRAMS_PATTERN = Pattern.compile("serving size .+ \\(([0-9]+) g\\)");
-    private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories  ([0-9]+)");
+    private static final Pattern GRAMS_PATTERN = Pattern.compile("serving size\\s+\\(?([0-9]+) g\\)?");
+    private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories\\s+([0-9]+)");
+    private Button adder;
     private ListView destination;
     private Context context;
     private View source;
+    private TextView errorField;
 
-    public SearchTask(Context context, ListView destination, View source) {
+    public SearchTask(Context context, Button adder, ListView destination, View source, TextView errorField) {
+        this.adder = adder;
         this.destination = destination;
         this.context = context;
         this.source = source;
-
+        this.errorField = errorField;
     }
 
     @Override
@@ -156,6 +162,7 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                         suggestions.add(d);
                     }
                 }
+                System.out.println("Success status: " + success);
             }
         // TODO: warnings, assumptions, other WA stuff
         } catch (WAException e) {
@@ -170,34 +177,23 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
     protected void onPostExecute(SearchResult sr) {
         List<String> items = new ArrayList<>();
 
-        items.add(0, sr.getFood());
+        if (sr.isSuccess()) {
+            adder.setVisibility(View.VISIBLE);
+            adder.setText("Add " + sr.getFood() + " (" + sr.getAmount() + " g)");
+        } else {
+            adder.setVisibility(View.GONE);
+        }
 
         if (sr != null) {
             List<String> suggest = sr.getSuggestions();
             if (!suggest.isEmpty()) {
                 items.addAll(suggest);
-            } else {
-                FoodModel model = new FoodModel(context);
-                try {
-                    model.open();
-                    System.out.println("INSERTING INTO DATABASE");
-                    System.out.println("\tFood: " + sr.getFood() + "\n\tAmount: " + sr.getAmount()
-                            + "\n\tCalories: " + sr.getCalories());
-                    model.addFood(sr.getFood(), sr.getAmount(), sr.getCalories());
-                    model.close();
-                    String formatted = sr.getFood() + " (" + sr.getAmount() + "g)";
-                    formatted += "\n" + sr.getCalories() + " calories";
-                    items.add(formatted);
-
-
-
-                } catch(SQLException e) {
-                    System.out.println("Something went wrong");
-                }
+                errorField.setVisibility(View.GONE);
+            } else if(!sr.isSuccess()) {
+                // everything failed.
+                errorField.setText("Sorry, your search returned no results.");
+                errorField.setVisibility(View.VISIBLE);
             }
-
-        } else {
-            items.add("Sorry, we couldn't seem to find anything.");
         }
 
         ArrayAdapter<String> searchResultAdapter = new ArrayAdapter<String>(
@@ -205,6 +201,10 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                 android.R.layout.simple_list_item_1,
                 items
         );
+
+
+        AddResultListener rl = new AddResultListener(context, adder, searchResultAdapter, sr);
+        adder.setOnClickListener(rl);
 
         destination.setAdapter(searchResultAdapter);
         source.setEnabled(true);

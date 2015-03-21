@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Created by ngraves3 on 3/21/15.
@@ -17,6 +18,7 @@ public class SearchFragment extends Fragment {
 
     ListView searchResultView;
     Button searchButton;
+    Button adder;
 
     /**
      * The fragment argument representing the section number for this
@@ -49,9 +51,11 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         searchButton = (Button) view.findViewById(R.id.searchButton);
+        adder = (Button) view.findViewById(R.id.queryResult);
         searchResultView = (ListView) view.findViewById(R.id.searchResults);
         EditText query = (EditText) view.findViewById(R.id.foodQuery);
-        SearchListener sl = new SearchListener(context, searchResultView, query);
+        TextView errorField = (TextView) view.findViewById(R.id.errorField);
+        SearchListener sl = new SearchListener(context, adder, searchResultView, query, errorField);
         searchButton.setOnClickListener(sl);
         searchResultView.setOnItemClickListener(sl);
 
