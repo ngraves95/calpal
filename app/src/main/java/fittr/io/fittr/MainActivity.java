@@ -1,7 +1,12 @@
 package fittr.io.fittr;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -32,13 +41,13 @@ public class MainActivity extends ActionBarActivity {
      */
     ViewPager mViewPager;
 
+    ListView searchResultView;
+    Button searchButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // test
-        new SearchTask().execute("pepperoni pizza");
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -48,6 +57,21 @@ public class MainActivity extends ActionBarActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        /*
+         * Set up the listeners for searching.
+         */
+        //setContentView(R.layout.search);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        searchResultView = (ListView) findViewById(R.id.searchResults);
+        EditText query = (EditText) findViewById(R.id.foodQuery);
+        searchButton.setOnClickListener(new SearchListener(
+                this,
+                searchResultView,
+                query
+                )
+        );
+
+        //setContentView(R.layout.activity_main);
     }
 
 
@@ -74,11 +98,42 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    private abstract class FragmentCreator {
+
+        /**
+         * Returns the fragment associated with this instance of FragmentCreator.
+         * @return
+         */
+        public abstract Fragment getFragment(int position);
+
+    }
+
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        /**
+         * Contains a FragmentCreator (aka an overly verbose function pointer)
+         * for each page.
+         */
+        private FragmentCreator[] pages = {
+                new FragmentCreator() {
+                    @Override
+                    public Fragment getFragment(int position) {
+                        return MainFragment.newInstance(position);
+                    }
+                },
+
+                new FragmentCreator() {
+                    @Override
+                    public Fragment getFragment(int position) {
+                        return SearchFragment.newInstance(position);
+                    }
+                }
+        };
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -86,19 +141,14 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == 1) {
-                return SearchFragment.newInstance(position);
-            }
-
-            return PlaceholderFragment.newInstance(position);
+            // Gets the fragment at the given position
+            return pages[position].getFragment(position);
         }
 
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return pages.length;
         }
 
         @Override
@@ -117,30 +167,28 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * Main fragment containing a view of the activities and meals.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class MainFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private static int sectionNumber;
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment.sectionNumber = sectionNumber;
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static MainFragment newInstance(int sectionNumber) {
+            MainFragment fragment = new MainFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        public MainFragment() {
         }
 
         @Override
