@@ -25,4 +25,10 @@ public class Util {
         cal.add(Calendar.DATE, 1);
         return cal.getTimeInMillis();
     }
+
+    public static Calendar now() {
+        Calendar now = Calendar.getInstance();
+        now.setTimeInMillis(System.currentTimeMillis());
+        return now;
+    }
 }

@@ -193,6 +193,15 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void updateCalories() {
+        if (mClient != null && mClient.isConnected()) {
+            long startTime = Util.dayStartMillis();
+            long endTime = Util.dayEndmillis();
+
+            CalorieTask calorieTask = new CalorieTask(mClient, startTime, endTime, (TextView) findViewById(R.id.netCalorieValue));
+            calorieTask.execute();
+        }
+    }
 
 
     private void buildFitnessClient() {
@@ -206,12 +215,7 @@ public class MainActivity extends ActionBarActivity {
                             public void onConnected(Bundle bundle) {
                                 System.out.println("Connected to Google Fit");
                                 // do stuff
-
-                                long startTime = Util.dayStartMillis();
-                                long endTime = Util.dayEndmillis();
-
-                                CalorieTask task = new CalorieTask(mClient, startTime, endTime, (TextView) findViewById(R.id.netCalorieValue));
-                                task.execute();
+                                updateCalories();
                             }
 
                             @Override
