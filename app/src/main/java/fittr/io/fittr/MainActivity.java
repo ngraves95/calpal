@@ -44,23 +44,17 @@ public class MainActivity extends ActionBarActivity {
     ListView searchResultView;
     Button searchButton;
 
+
+    private Fragment[] pages = { MainFragment.newInstance(0), SearchFragment.newInstance(1, this) };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         /*
          * Set up the listeners for searching.
          */
-        //setContentView(R.layout.search);
+        setContentView(R.layout.search);
         searchButton = (Button) findViewById(R.id.searchButton);
         searchResultView = (ListView) findViewById(R.id.searchResults);
         EditText query = (EditText) findViewById(R.id.foodQuery);
@@ -71,7 +65,16 @@ public class MainActivity extends ActionBarActivity {
                 )
         );
 
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), pages);
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
     }
 
 
@@ -98,16 +101,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    private abstract class FragmentCreator {
-
-        /**
-         * Returns the fragment associated with this instance of FragmentCreator.
-         * @return
-         */
-        public abstract Fragment getFragment(int position);
-
-    }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -119,30 +112,18 @@ public class MainActivity extends ActionBarActivity {
          * Contains a FragmentCreator (aka an overly verbose function pointer)
          * for each page.
          */
-        private FragmentCreator[] pages = {
-                new FragmentCreator() {
-                    @Override
-                    public Fragment getFragment(int position) {
-                        return MainFragment.newInstance(position);
-                    }
-                },
 
-                new FragmentCreator() {
-                    @Override
-                    public Fragment getFragment(int position) {
-                        return SearchFragment.newInstance(position);
-                    }
-                }
-        };
+        private Fragment[] pages;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm, Fragment[] pages) {
             super(fm);
+            this.pages = pages;
         }
 
         @Override
         public Fragment getItem(int position) {
             // Gets the fragment at the given position
-            return pages[position].getFragment(position);
+            return pages[position];
         }
 
         @Override
@@ -151,19 +132,6 @@ public class MainActivity extends ActionBarActivity {
             return pages.length;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
-        }
     }
 
     /**
