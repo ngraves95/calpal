@@ -1,5 +1,6 @@
 package fittr.io.fittr;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceActivity;
@@ -25,6 +26,7 @@ import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
 import com.wolfram.alpha.impl.WAAssumptionImpl;
+import com.wolfram.alpha.test.Main;
 
 /**
  * Class that queries WA for food nutrition information. Extends the Android Async class. The
@@ -42,6 +44,7 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
     private Context context;
     private View source;
     private TextView errorField;
+    private ProgressDialog progress;
 
     public SearchTask(Context context, Button adder, ListView destination, View source, TextView errorField) {
         this.adder = adder;
@@ -54,6 +57,10 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
     @Override
     protected void onPreExecute() {
         source.setEnabled(false);
+        progress = new ProgressDialog(context);
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while loading...");
+        progress.show();
 
     }
 
@@ -203,10 +210,20 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
 
 
         AddResultListener rl = new AddResultListener(context, adder, searchResultAdapter, sr);
-        adder.setOnClickListener(rl);
+        SwapPageListener sl = new SwapPageListener(((MainActivity)context).mViewPager);
+        CompositeListener compList = new CompositeListener();
+        compList.add(rl);
+        compList.add(sl);
 
+        //adder.setOnClickListener(rl);
+        //MainActivity act = (MainActivity) context;
+        //adder.setOnClickListener(new SwapPageListener(act.mViewPager));
+        adder.setOnClickListener(compList);
         destination.setAdapter(searchResultAdapter);
         source.setEnabled(true);
+        // To dismiss the dialog
+        progress.dismiss();
+
     }
 
 }

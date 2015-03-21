@@ -52,6 +52,32 @@ public class FoodModel {
         db.insert(FittrSQLiteHelper.TABLE_FOODS, null, values);
     }
 
+    public String deleteMatchingFood(String food, String calories) {
+        Cursor cursor = db.query(FittrSQLiteHelper.TABLE_FOODS, allColumns,
+                null, null, null, null, null
+        );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+
+            System.out.println("Food: " + food + "|");
+            System.out.println("Act.: " + cursor.getString(4) + "|");
+            System.out.println("Calories: " + calories + "|");
+            System.out.println("Actual..: " + cursor.getString(2) + "|");
+            if (food.equals(cursor.getString(4)) && calories.equals(cursor.getString(2))) {
+                String rowId = cursor.getString(0);
+                db.delete(FittrSQLiteHelper.TABLE_FOODS, FittrSQLiteHelper.COLUMN_ID + '=' + rowId, null);
+                return rowId;
+            }
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return null;
+    }
+
     /**
      * Delete food with the given id.
      *
@@ -74,7 +100,7 @@ public class FoodModel {
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            String food = cursor.getString(4) + "\t" + cursor.getString(2);
+            String food = cursor.getString(4) + " \t" + cursor.getString(2);
             out.add(food);
             cursor.moveToNext();
         }

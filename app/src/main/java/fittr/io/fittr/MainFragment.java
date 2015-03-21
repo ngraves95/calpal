@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class MainFragment extends Fragment {
 
-
-
     TextView netCaloriesText;
     TextView netCaloriesValue;
     ListView mealsData;
@@ -93,9 +91,7 @@ public class MainFragment extends Fragment {
         cw.colorText();
 
         updateMealData();
-
-
-
+        mealsData.setOnItemLongClickListener(new DeleteListener(context, mealsData, items,netCaloriesValue));
     }
 
     @Override
