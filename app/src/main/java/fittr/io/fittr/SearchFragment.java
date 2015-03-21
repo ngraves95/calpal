@@ -1,6 +1,7 @@
 package fittr.io.fittr;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ public class SearchFragment extends Fragment {
     ListView searchResultView;
     Button searchButton;
     Button adder;
+    EditText query;
 
     /**
      * The fragment argument representing the section number for this
@@ -53,7 +55,16 @@ public class SearchFragment extends Fragment {
         searchButton = (Button) view.findViewById(R.id.searchButton);
         adder = (Button) view.findViewById(R.id.queryResult);
         searchResultView = (ListView) view.findViewById(R.id.searchResults);
-        EditText query = (EditText) view.findViewById(R.id.foodQuery);
+        query = (EditText) view.findViewById(R.id.foodQuery);
+
+        query.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                query.setTextColor(Color.parseColor("#000000"));
+                query.setText("");
+            }
+        });
+
         TextView errorField = (TextView) view.findViewById(R.id.errorField);
         SearchListener sl = new SearchListener(context, adder, searchResultView, query, errorField);
         searchButton.setOnClickListener(sl);
