@@ -62,23 +62,12 @@ public class FoodModel {
     }
 
     public List<String> getFoodsAtDate(Calendar date) {
-        Calendar minTime = Calendar.getInstance();
-        minTime.set(
-            date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
-            0, 0, 0
-        );
-        Calendar maxTime = Calendar.getInstance();
-        maxTime.set(
-                date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
-                24, 0, 0
-        );
-
         List<String> out = new ArrayList<>();
 
-        long minTimeStamp = minTime.getTimeInMillis() / 1000L;
-        long maxTimeStamp = maxTime.getTimeInMillis() / 1000L;
+        long minTimeStamp = Util.dayStartMillis() / 1000L;
+        long maxTimeStamp = Util.dayEndmillis() / 1000L;
         Cursor cursor = db.query(FittrSQLiteHelper.TABLE_FOODS, allColumns,
-                /*"timestamp >= " + minTimeStamp + " AND timestamp <= " + maxTimeStamp*/ null,
+                "timestamp >= " + minTimeStamp + " AND timestamp <= " + maxTimeStamp,
                 null, null, null, null
         );
 
