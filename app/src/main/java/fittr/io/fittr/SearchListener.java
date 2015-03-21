@@ -9,8 +9,10 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +26,22 @@ import java.util.regex.Pattern;
 public class SearchListener implements View.OnClickListener, ListView.OnItemClickListener {
 
     private Context context;
+    private Button adder;
     private ListView destination;
     private EditText source;
+    private TextView errorField;
 
     /**
      * Constructor for SearchListener
      * @param context the context (the parent container)
      * @param destination the place to put the results of executing the call
      */
-    public SearchListener(Context context, ListView destination, EditText source) {
+    public SearchListener(Context context, Button adder, ListView destination, EditText source, TextView errorField) {
         this.context = context;
+        this.adder = adder;
         this.destination = destination;
         this.source = source;
+        this.errorField = errorField;
     }
 
 
@@ -53,7 +59,7 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
      */
     private void search(String query, View trigger) {
 
-        AsyncTask<String, Integer, SearchResult> task = new SearchTask(context, destination, trigger).execute(query);
+        AsyncTask<String, Integer, SearchResult> task = new SearchTask(context, adder, destination, trigger, errorField).execute(query);
 
     }
 
@@ -63,9 +69,11 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
 
         if (adapterView.getAdapter().getCount() == 1) {
             FoodModel model = new FoodModel(context);
-
-
         }
+
+        source.setText(query);
+        ((ArrayAdapter<String>) destination.getAdapter()).clear();
+        adder.setVisibility(View.GONE);
         search(query, adapterView);
     }
 }

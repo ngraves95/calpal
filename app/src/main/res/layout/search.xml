@@ -40,9 +40,27 @@
 
     </LinearLayout>
 
-    <ListView
+    <Button
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/queryResult"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/errorField"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:textColor="#ffff0009" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="310dp"
         android:id="@+id/searchResults" />
 
 </LinearLayout>
