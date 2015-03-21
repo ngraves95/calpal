@@ -7,6 +7,7 @@ package fittr.io.fittr;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -43,6 +44,8 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
     @Override
     public void onClick(View view) {
         String query = source.getText().toString();
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(source.getWindowToken(), 0);
         search(query, view);
     }
 
@@ -70,6 +73,11 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
         ((ArrayAdapter<String>) destination.getAdapter()).clear();
         adder.setVisibility(View.GONE);
 
+        // Hide keyboard
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(source.getWindowToken(), 0);
+
+        //view.setEnabled(false);
         search(query, adapterView);
     }
 }
