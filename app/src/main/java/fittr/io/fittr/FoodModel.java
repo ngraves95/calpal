@@ -43,10 +43,11 @@ public class FoodModel {
      * @param food The name of the food to add
      * @param amount The amount of food in grams to add
      */
-    public void addFood(String food, int amount) {
+    public void addFood(String food, int amount, int calories) {
         ContentValues values = new ContentValues();
         values.put(FittrSQLiteHelper.COLUMN_FOOD, food);
         values.put(FittrSQLiteHelper.COLUMN_AMOUNT, amount);
+        values.put(FittrSQLiteHelper.COLUMN_CALORIES, calories);
         values.put(FittrSQLiteHelper.COLUMN_TIMESTAMP, System.currentTimeMillis() / 1000L);
         db.insert(FittrSQLiteHelper.TABLE_FOODS, null, values);
     }

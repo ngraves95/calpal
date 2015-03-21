@@ -15,6 +15,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Listener that executes the searching.
@@ -45,6 +47,7 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
 
     /**
      * Executes the SearchTask with the input query
+     * @param trigger the view that was clicked
      * @param query the String to search for
      * @return a SearchResult object of the query
      */
@@ -57,6 +60,12 @@ public class SearchListener implements View.OnClickListener, ListView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String query = (String) adapterView.getItemAtPosition(i);
+
+        if (adapterView.getAdapter().getCount() == 1) {
+            FoodModel model = new FoodModel(context);
+
+
+        }
         search(query, adapterView);
     }
 }

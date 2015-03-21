@@ -1,12 +1,5 @@
 package fittr.io.fittr;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-
-import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,11 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -41,29 +29,11 @@ public class MainActivity extends ActionBarActivity {
      */
     ViewPager mViewPager;
 
-    ListView searchResultView;
-    Button searchButton;
-
-
-    private Fragment[] pages = { MainFragment.newInstance(0), SearchFragment.newInstance(1, this) };
+    private Fragment[] pages = { MainFragment.newInstance(0, this), SearchFragment.newInstance(1, this) };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*
-         * Set up the listeners for searching.
-
-        setContentView(R.layout.search);
-        searchButton = (Button) findViewById(R.id.searchButton);
-        searchResultView = (ListView) findViewById(R.id.searchResults);
-        EditText query = (EditText) findViewById(R.id.foodQuery);
-        searchButton.setOnClickListener(new SearchListener(
-                this,
-                searchResultView,
-                query
-                )
-        );*/
 
         setContentView(R.layout.activity_main);
 
@@ -134,37 +104,6 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    /**
-     * Main fragment containing a view of the activities and meals.
-     */
-    public static class MainFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static MainFragment newInstance(int sectionNumber) {
-            MainFragment fragment = new MainFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public MainFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            return inflater.inflate(R.layout.fragment_main, container, false);
-        }
-    }
 
 }

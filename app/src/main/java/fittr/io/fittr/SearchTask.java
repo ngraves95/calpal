@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -153,8 +154,6 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
         return new SearchResult(food, grams, calories, suggestions, success);
     }
 
-
-
     @Override
     protected void onPostExecute(SearchResult sr) {
         List<String> items = new ArrayList<>();
@@ -164,11 +163,27 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
             if (!sr.getSuggestions().isEmpty()) {
                 items = suggest;
             } else {
-                items.add(sr.getFood());
-                items.add(((Integer) sr.getAmount()).toString());
-                items.add(((Integer) sr.getCalories()).toString());
+                FoodModel model = new FoodModel(context);
+                try {
+                    model.open();
+                    System.out.println("INSERTING INTO DATABASE");
+                    System.out.println("\tFood: " + sr.getFood() + "\n\tAmount: " + sr.getAmount()
+                            + "\n\tCalories: " + sr.getCalories());
+                    model.addFood(sr.getFood(), sr.getAmount(), sr.getCalories());
+                    model.close();
+                    String formatted = sr.getFood() + " (" + sr.getAmount() + "g)";
+                    formatted += "\n" + sr.getCalories() + " calories";
+                    items.add(formatted);
+
+
+
+                } catch(SQLException e) {
+                    System.out.println("Something went wrong");
+                }
             }
 
+        } else {
+            items.add("Sorry, we couldn't seem to find anything.");
         }
 
         ArrayAdapter<String> searchResultAdapter = new ArrayAdapter<String>(
