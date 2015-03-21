@@ -29,10 +29,9 @@ public class CalorieTextWatcher implements TextWatcher{
             try {
                 calCount=Integer.parseInt(value.getText().toString());
             } catch (NumberFormatException nfe){
-                calCount = 0;
                 source.setBackgroundColor(surplus);
                 value.setBackgroundColor(surplus);
-                value.setText("...");
+                return;
             }
             source.setText("Net Calories Consumed: ");
             if (calCount > 2000) {
