@@ -7,6 +7,7 @@ package fittr.io.fittr;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Listener that executes the searching.
  */
-public class SearchListener implements View.OnClickListener {
+public class SearchListener implements View.OnClickListener, ListView.OnItemClickListener {
 
     private Context context;
     private ListView destination;
@@ -38,22 +39,8 @@ public class SearchListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        SearchResult results = search(source.getText().toString());
-
-        List<String> items = new ArrayList<>();
-        items.add("ERROR");
-
-        if (results != null) {
-            items = results.getSuggestions();
-        }
-
-        ArrayAdapter<String> searchResultAdapter = new ArrayAdapter<String>(
-                context,
-                android.R.layout.simple_list_item_1,
-                items
-        );
-
-        destination.setAdapter(searchResultAdapter);
+        String query = source.getText().toString();
+        search(query, view);
     }
 
     /**
@@ -61,19 +48,15 @@ public class SearchListener implements View.OnClickListener {
      * @param query the String to search for
      * @return a SearchResult object of the query
      */
-    private SearchResult search(String query) {
+    private void search(String query, View trigger) {
 
-        AsyncTask<String, Integer, SearchResult> task = new SearchTask().execute(query);
-        SearchResult result = null;
+        AsyncTask<String, Integer, SearchResult> task = new SearchTask(context, destination, trigger).execute(query);
 
-        try {
-            result = task.get();
-        } catch (InterruptedException i) {
-            // Eat exception om nom nom
-        } catch (ExecutionException e) {
-            // Eat more exceptions nom nom nom
-        }
+    }
 
-        return result;
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        String query = (String) adapterView.getItemAtPosition(i);
+        search(query, adapterView);
     }
 }

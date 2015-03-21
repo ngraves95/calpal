@@ -1,6 +1,12 @@
 package fittr.io.fittr;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -28,6 +34,23 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
     private static String appid = "G5Q47V-QGJ6JYKHUP";
     private static final Pattern GRAMS_PATTERN = Pattern.compile("serving size .+ \\(([0-9]+) g\\)");
     private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories  ([0-9]+)");
+    private ListView destination;
+    private Context context;
+    private View source;
+
+    public SearchTask(Context context, ListView destination, View source) {
+        this.destination = destination;
+        this.context = context;
+        this.source = source;
+
+    }
+
+    @Override
+    protected void onPreExecute() {
+        source.setEnabled(false);
+
+    }
+
 
     protected SearchResult doInBackground(String... input) {
 
@@ -129,4 +152,33 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
         // TODO: return calories
         return new SearchResult(food, grams, calories, suggestions, success);
     }
+
+
+
+    @Override
+    protected void onPostExecute(SearchResult sr) {
+        List<String> items = new ArrayList<>();
+
+        if (sr != null) {
+            List<String> suggest = sr.getSuggestions();
+            if (!sr.getSuggestions().isEmpty()) {
+                items = suggest;
+            } else {
+                items.add(sr.getFood());
+                items.add(((Integer) sr.getAmount()).toString());
+                items.add(((Integer) sr.getCalories()).toString());
+            }
+
+        }
+
+        ArrayAdapter<String> searchResultAdapter = new ArrayAdapter<String>(
+                context,
+                android.R.layout.simple_list_item_1,
+                items
+        );
+
+        destination.setAdapter(searchResultAdapter);
+        source.setEnabled(true);
+    }
+
 }
