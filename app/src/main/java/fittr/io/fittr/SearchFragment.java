@@ -51,13 +51,9 @@ public class SearchFragment extends Fragment {
         searchButton = (Button) view.findViewById(R.id.searchButton);
         searchResultView = (ListView) view.findViewById(R.id.searchResults);
         EditText query = (EditText) view.findViewById(R.id.foodQuery);
-
-        searchButton.setOnClickListener(new SearchListener(
-                        context,
-                        searchResultView,
-                        query
-                )
-        );
+        SearchListener sl = new SearchListener(context, searchResultView, query);
+        searchButton.setOnClickListener(sl);
+        searchResultView.setOnItemClickListener(sl);
 
     }
 
