@@ -22,8 +22,7 @@ android {
 dependencies {
     compile 'commons-codec:commons-codec:1.5'
     compile 'org.apache.httpcomponents:httpclient:4.4'
-    //compile 'org.apache.httpcomponents:httpcore:4.4'
-    //compile 'commons-logging:commons-logging:1.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.+'
+    compile 'com.google.android.gms:play-services:7.0.0'
 }
