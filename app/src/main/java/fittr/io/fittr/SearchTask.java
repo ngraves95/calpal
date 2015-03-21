@@ -37,8 +37,6 @@ import com.wolfram.alpha.test.Main;
  */
 public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
 
-    // TODO: remove this from git
-    private static String appid = "G5Q47V-QGJ6JYKHUP";
     private static final Pattern GRAMS_PATTERN = Pattern.compile("\\(?([0-9]+) g\\)?$", Pattern.MULTILINE);
     private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories\\s+([0-9]+)");
     private Button adder;
@@ -74,7 +72,7 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
         // create and perform WA queries with this object
         WAEngine engine = new WAEngine();
 
-        engine.setAppID(appid);
+        engine.setAppID(MainActivity.WA_APP_ID);
         engine.addFormat("plaintext");
 
         // make query

@@ -35,6 +35,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataPoint;
@@ -42,6 +43,8 @@ import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
+import com.google.android.gms.plus.People;
+import com.google.android.gms.plus.Plus;
 import com.wolfram.alpha.test.Main;
 
 public class MainActivity extends ActionBarActivity {
@@ -64,6 +67,9 @@ public class MainActivity extends ActionBarActivity {
 
     private Fragment[] pages = { MainFragment.newInstance(0, this), SearchFragment.newInstance(1, this) };
 
+
+    // TODO: remove this from git
+    public static final String WA_APP_ID = "G5Q47V-QGJ6JYKHUP";
 
     // Google Fit authentication
     private static final int REQUEST_OAUTH = 1;
@@ -204,7 +210,7 @@ public class MainActivity extends ActionBarActivity {
                                 long startTime = Util.dayStartMillis();
                                 long endTime = Util.dayEndmillis();
 
-                                CalorieTask task = new CalorieTask(mClient, startTime, endTime, (TextView)findViewById(R.id.netCalorieValue));
+                                CalorieTask task = new CalorieTask(mClient, startTime, endTime, (TextView) findViewById(R.id.netCalorieValue));
                                 task.execute();
                             }
 
