@@ -42,6 +42,7 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
         query.setInput(input[0]);
 
         // default results
+        String food = input[0];
         boolean success = true;
         Integer grams = 0;
         Integer calories = 0;
@@ -67,6 +68,19 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                 for (WAPod pod : queryResult.getPods()) {
                     if (!pod.isError()) {
                         System.out.println(pod.getTitle());
+                        // find pod with input interpretation
+                        if (pod.getTitle().toLowerCase().contains("input interpretation")) {
+                            for (WASubpod subpod : pod.getSubpods()) {
+                                for (Object element : subpod.getContents()) {
+                                    if (element instanceof WAPlainText) {
+                                        String plaintext = ((WAPlainText) element).getText();
+                                        System.out.println("Found input interpretation:");
+                                        food = plaintext.split("\\|")[0].trim();
+                                        System.out.println(food);
+                                    }
+                                }
+                            }
+                        }
                         // find pod with nutrition facts
                         if (pod.getTitle().toLowerCase().contains("nutrition facts")) {
                             System.out.println("Found nutrition facts. Continuing.");
@@ -90,9 +104,6 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                                     }
                                 }
                             }
-                        } else {
-                            System.out.println("Could not find nutrition facts.");
-                            success = false;
                         }
 
                         System.out.println("");
@@ -113,6 +124,6 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
         }
 
         // TODO: return calories
-        return new SearchResult(input[0], grams, calories, suggestions, success);
+        return new SearchResult(food, grams, calories, suggestions, success);
     }
 }
