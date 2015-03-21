@@ -21,6 +21,7 @@ import com.wolfram.alpha.WAPod;
 import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
+import com.wolfram.alpha.impl.WAAssumptionImpl;
 
 /**
  * Class that queries WA for food nutrition information. Extends the Android Async class. The
@@ -65,9 +66,14 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
         WAQuery query = engine.createQuery();
         query.setInput(input[0]);
 
+        // add an assumption
+        if (input.length > 1) {
+            query.addAssumption(input[1]);
+        }
+
         // default results
         String food = input[0];
-        boolean success = true;
+        boolean success = false;
         Integer grams = 0;
         Integer calories = 0;
         List<String> suggestions = new ArrayList<String>();
@@ -82,10 +88,8 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                 System.out.println("Query error:");
                 System.out.println("   error code: " + queryResult.getErrorCode());
                 System.out.println("   error message: " + queryResult.getErrorMessage());
-                success = false;
             } else if (!queryResult.isSuccess()) {
                 System.out.println("Query was not understood; no results available.");
-                success = false;
             } else {
                 // Got a result
                 System.out.println("Successful query. Pods follow:\n");
@@ -117,13 +121,13 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                                         System.out.println("Extracted the following:");
                                         Matcher gramMatcher = GRAMS_PATTERN.matcher(plaintext);
                                         Matcher calsMatcher = CALORIES_PATTERN.matcher(plaintext);
-                                        if (gramMatcher.find()) {
+                                        if (gramMatcher.find() && calsMatcher.find()) {
                                             grams = Integer.parseInt(gramMatcher.group(1));
                                             System.out.println("Grams: " + grams.toString());
-                                        }
-                                        if (calsMatcher.find()) {
                                             calories = Integer.parseInt(calsMatcher.group(1));
                                             System.out.println("Calories: " + calories.toString());
+
+                                            success = true;
                                         }
                                     }
                                 }
@@ -137,6 +141,14 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                 for (WAAssumption assumption : queryResult.getAssumptions()) {
                     System.out.println("----------");
                     if (assumption.getType().toLowerCase().equals("clash")) {
+                        if (!success) { // check for a food assumption on failure
+                            for (int i = 0; i < assumption.getCount(); i++) {
+                                if (assumption.getNames()[i].equals("ExpandedFood")) {
+                                    // re-run the query with the new assumption
+                                    return doInBackground(input[0], assumption.getInputs()[i]);
+                                }
+                            }
+                        }
                         continue; // skip clashes
                     }
                     for (String d : assumption.getDescriptions()) {
@@ -158,10 +170,12 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
     protected void onPostExecute(SearchResult sr) {
         List<String> items = new ArrayList<>();
 
+        items.add(0, sr.getFood());
+
         if (sr != null) {
             List<String> suggest = sr.getSuggestions();
-            if (!sr.getSuggestions().isEmpty()) {
-                items = suggest;
+            if (!suggest.isEmpty()) {
+                items.addAll(suggest);
             } else {
                 FoodModel model = new FoodModel(context);
                 try {
