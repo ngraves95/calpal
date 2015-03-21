@@ -18,8 +18,8 @@ public class CalorieTextWatcher implements TextWatcher{
     public CalorieTextWatcher(TextView source, TextView value) {
         this.source = source;
         this.value = value;
-        surplus = Color.parseColor("#FF4747");
-        deficiency = Color.parseColor("#008A2E");
+        surplus = Color.parseColor("#c12300");//"#FF4747");
+        deficiency = Color.parseColor("#bad107");//"#008A2E");
     }
 
     public void colorText() {

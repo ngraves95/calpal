@@ -4,16 +4,21 @@
         android:orientation="vertical"
         android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_height="match_parent"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        tools:context=".MainActivity$PlaceholderFragment">
+        android:background="#eeeeee"
+        tools:context=".MainActivity">
 
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:textColor="#ffffff"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:background="#ee6505"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Meals"
@@ -22,11 +27,14 @@
 
         <LinearLayout
             android:layout_weight="1"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
             <ListView
+
+                android:background="#eeeeee"
                 android:layout_weight="1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -43,20 +51,6 @@
                 android:textSize="36dp"
                 android:layout_gravity="top" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Activities"
-            android:id="@+id/activitiesText"
-            android:textSize="36dp" />
-
-        <ListView
-            android:layout_weight="1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/activitiesData" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -79,7 +73,7 @@
                 android:id="@+id/netCalories" />
 
             <TextView
-                android:textColor="#eeeeee"
+                android:textColor="#ffffff"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingRight="16dp"

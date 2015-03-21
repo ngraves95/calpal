@@ -60,6 +60,8 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
     protected void onPreExecute() {
         source.setEnabled(false);
         progress = new ProgressDialog(context);
+        progress.setCancelable(false);
+        progress.setCanceledOnTouchOutside(false);
         progress.setTitle("Loading");
         progress.setMessage("Wait while loading...");
         progress.show();
@@ -201,7 +203,11 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                 // everything failed.
                 errorField.setText("Sorry, your search returned no results.");
                 errorField.setVisibility(View.VISIBLE);
+            } else {
+                // Search was successful but no alternatives
+                errorField.setVisibility(View.GONE);
             }
+
         }
 
         ArrayAdapter<String> searchResultAdapter = new ArrayAdapter<String>(
