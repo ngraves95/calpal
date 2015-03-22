@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ee6505">
 
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"></FrameLayout>
+    <TextView
+        android:layout_width="395dp"
+        android:layout_height="205dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="fittr"
+        android:id="@+id/textView2"
+        android:layout_gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="100dp"
+        android:typeface="sans"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:phoneNumber="true" />
+
+    <ImageView
+        android:layout_width="268dp"
+        android:layout_height="209dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/fittrlogo"
+        android:paddingTop="120dp" />
 </FrameLayout>
