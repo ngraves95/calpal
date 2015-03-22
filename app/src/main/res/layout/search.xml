@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Food"
+        android:text="Search"
         android:id="@+id/textView"
         android:textSize="36sp" />
 

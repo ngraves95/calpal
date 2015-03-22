@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -119,6 +120,7 @@ public class MainFragment extends Fragment {
 
                 System.out.println("Main fragment resuming");
                 model.close();
+
             } catch (SQLException s) {
                 // Eat it
             }

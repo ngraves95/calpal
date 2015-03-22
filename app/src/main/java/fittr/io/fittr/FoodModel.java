@@ -100,7 +100,7 @@ public class FoodModel {
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            String food = cursor.getString(4) + " \t" + cursor.getString(2);
+            String food = cursor.getString(4) + "\t\t" + cursor.getString(2) + " cal\t\t(" +cursor.getString(1) + " g)" ;
             out.add(food);
             cursor.moveToNext();
         }
