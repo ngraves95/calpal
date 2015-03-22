@@ -63,6 +63,8 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
 
         System.out.println("Getting Calorie data....");
 
+        Person me = Plus.PeopleApi.getCurrentPerson(mClient);
+
         DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .aggregate(DataType.TYPE_SPEED, DataType.AGGREGATE_SPEED_SUMMARY)
@@ -87,6 +89,7 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
 
         int steps = 0;
         float weight = 0; // kg
+        boolean male = me.hasGender() && me.getGender() == Person.Gender.MALE;
 
         try {
             for (DataPoint dp : readResult.getBuckets().get(0).getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA).getDataPoints()) {
@@ -109,7 +112,7 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
             return lastCals;
         }
 
-        int calories = calcCalories(weight, steps);
+        int calories = calcCalories(weight, steps, male);
 
         System.out.println("Counted " + steps + " steps which burns " + calories + " calories.");
         System.out.println("Average weight " + weight);
@@ -141,7 +144,7 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
         destination.setText(currentCalCount + "");
     }
 
-    private int calcCalories(float weight, int steps) {
+    private int calcCalories(float weight, int steps, boolean male) {
 
         // create and perform WA queries with this object
         WAEngine engine = new WAEngine();
@@ -150,8 +153,9 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
         engine.addFormat("plaintext");
 
         // make query
+        String gender = male ? "male" : "female";
         WAQuery query = engine.createQuery();
-        query.setInput("calories burned from a " + weight + "kg male walking " + steps + "steps");
+        query.setInput("calories burned from a " + weight + "kg " + gender + " walking " + steps + "steps");
 
         // defaults
         int calories = 0;
