@@ -48,7 +48,9 @@
                 android:background="@drawable/round_button"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="36dp"
-                android:layout_gravity="bottom" />
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="bottom"
+                android:paddingBottom="8dp" />
         </LinearLayout>
 
         <LinearLayout
