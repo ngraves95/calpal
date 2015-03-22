@@ -1,5 +1,6 @@
 package fittr.io.fittr;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -200,6 +201,18 @@ public class MainActivity extends ActionBarActivity {
 
             CalorieTask calorieTask = new CalorieTask(mClient, startTime, endTime, (TextView) findViewById(R.id.netCalorieValue));
             calorieTask.execute(force);
+        } else {
+            FoodModel model = new FoodModel(this);
+            try {
+                model.open();
+                int calCount = model.getCalorieCountAtDate(Calendar.getInstance());
+                TextView calorieCounter = (TextView) findViewById(R.id.netCalorieValue);
+                calorieCounter.setText(calCount + "");
+                model.close();
+            } catch (SQLException sqle) {
+                System.out.println("Failed to get calories from database");
+            }
+
         }
     }
 

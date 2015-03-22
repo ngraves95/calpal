@@ -42,7 +42,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="+"
-
+                android:layout_marginRight="8dp"
                 android:textColor="@color/button_text_color"
                 android:id="@+id/addFoodButton"
                 android:background="@drawable/round_button"
