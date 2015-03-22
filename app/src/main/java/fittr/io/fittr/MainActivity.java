@@ -221,8 +221,10 @@ public class MainActivity extends ActionBarActivity {
     private void buildFitnessClient() {
         mClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.HISTORY_API)
+                .addApi(Plus.API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ))
                 .addScope(new Scope(Scopes.FITNESS_BODY_READ))
+                .addScope(new Scope(Scopes.PLUS_ME))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
                             @Override
