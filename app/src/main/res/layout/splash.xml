@@ -26,3 +26,4 @@
         android:src="@drawable/fittrlogo"
         android:paddingTop="120dp" />
 </FrameLayout>
+
