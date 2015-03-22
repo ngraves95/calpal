@@ -88,16 +88,20 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
         int steps = 0;
         float weight = 0; // kg
 
-        for (DataPoint dp : readResult.getBuckets().get(0).getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA).getDataPoints()) {
-            for(Field field : dp.getDataType().getFields()) {
-                if (field.getName().toLowerCase().equals("steps")) {
-                    steps += dp.getValue(field).asInt();
+        try {
+            for (DataPoint dp : readResult.getBuckets().get(0).getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA).getDataPoints()) {
+                for (Field field : dp.getDataType().getFields()) {
+                    if (field.getName().toLowerCase().equals("steps")) {
+                        steps += dp.getValue(field).asInt();
+                    }
                 }
             }
+            // TODO: get accurate speed data
+            DataPoint wp = weightReadResult.getDataSet(DataType.TYPE_WEIGHT).getDataPoints().get(0);
+            weight = wp.getValue(wp.getDataType().getFields().get(0)).asFloat();
+        } catch(IndexOutOfBoundsException e) {
+            // lazy man's way out of this problem
         }
-        // TODO: get accurate speed data
-        DataPoint wp = weightReadResult.getDataSet(DataType.TYPE_WEIGHT).getDataPoints().get(0);
-        weight = wp.getValue(wp.getDataType().getFields().get(0)).asFloat();
 
         // avoid querying WA if possible
         if (!input[0] && lastSteps == steps) {
