@@ -63,9 +63,7 @@ public class DeleteListener implements ListView.OnItemLongClickListener{
             if (retval != null) {
                 items.remove(i);
                 System.out.println("Removing an item from model");
-                int calories = Integer.parseInt(foodQuant[1]);
-                int newCalories = Integer.parseInt(calCount.getText().toString()) - calories;
-                calCount.setText(newCalories + "");
+                ((MainActivity) context).updateCalories(true);
                 ((ArrayAdapter) adapterView.getAdapter()).notifyDataSetChanged();
             }
 

@@ -37,7 +37,7 @@ import com.wolfram.alpha.test.Main;
  */
 public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
 
-    private static final Pattern GRAMS_PATTERN = Pattern.compile("\\(?([0-9]+) g\\)?$", Pattern.MULTILINE);
+    private static final Pattern GRAMS_PATTERN = Pattern.compile("\\(?([0-9]+) [mk]?g\\)?$", Pattern.MULTILINE);
     private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories\\s+([0-9]+)");
     private Button adder;
     private ListView destination;
