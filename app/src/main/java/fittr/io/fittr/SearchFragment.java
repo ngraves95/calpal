@@ -62,10 +62,14 @@ public class SearchFragment extends Fragment {
         query.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                EditText txtName = (EditText) getActivity().findViewById(R.id.foodQuery);
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.showSoftInput(txtName, InputMethodManager.SHOW_IMPLICIT);
-                //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                if (query.hasFocus()) {
+                    inputMethodManager.showSoftInput(query, InputMethodManager.SHOW_IMPLICIT);
+                } else {
+                    inputMethodManager.hideSoftInputFromWindow(query.getWindowToken(), 0);
+                }
 
                 query.setTextColor(Color.parseColor("#000000"));
                 query.setText("");
