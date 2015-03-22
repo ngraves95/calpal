@@ -8,8 +8,6 @@
         android:background="#eeeeee"
         tools:context=".MainActivity">
 
-
-
         <TextView
             android:textColor="#ffffff"
             android:paddingTop="16dp"
@@ -61,7 +59,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:textColor="#eeeeee"
+                android:textColor="#ffffff"
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"

@@ -89,7 +89,7 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
 
         int steps = 0;
         float weight = 0; // kg
-        boolean male = me.hasGender() && me.getGender() == Person.Gender.MALE;
+        boolean male = me != null && me.hasGender() && me.getGender() == Person.Gender.MALE;
 
         try {
             for (DataPoint dp : readResult.getBuckets().get(0).getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA).getDataPoints()) {
@@ -126,7 +126,7 @@ public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
 
     @Override
     protected void onPreExecute() {
-        destination.setText("Calculating...");
+        destination.setText("Loading...");
     }
 
     @Override

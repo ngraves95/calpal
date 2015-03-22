@@ -63,11 +63,11 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
 
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-
                 if (query.hasFocus()) {
+                    InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.showSoftInput(query, InputMethodManager.SHOW_IMPLICIT);
                 } else {
+                    InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(query.getWindowToken(), 0);
                 }
 
