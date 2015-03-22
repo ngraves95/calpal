@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  *
  * Created by creston on 3/21/15.
  */
-public class CalorieTask extends AsyncTask<Void, Void, Integer> {
+public class CalorieTask extends AsyncTask<Boolean, Void, Integer> {
 
     private GoogleApiClient mClient;
     private long startTime;
@@ -47,6 +47,8 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
 
     public static final Pattern CALORIES_PATTERN = Pattern.compile("([0-9]+) Cal");
 
+    private static int lastSteps = 0;
+    private static int lastCals = 0;
 
     private TextView destination;
 
@@ -57,7 +59,8 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
         this.destination = destination;
     }
 
-    protected Integer doInBackground(Void... input) {
+    protected Integer doInBackground(Boolean... input) {
+
         System.out.println("Getting Calorie data....");
 
         DataReadRequest readRequest = new DataReadRequest.Builder()
@@ -96,10 +99,19 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
         DataPoint wp = weightReadResult.getDataSet(DataType.TYPE_WEIGHT).getDataPoints().get(0);
         weight = wp.getValue(wp.getDataType().getFields().get(0)).asFloat();
 
+        // avoid querying WA if possible
+        if (!input[0] && lastSteps == steps) {
+            System.out.println("Keeping last calorie count.");
+            return lastCals;
+        }
+
         int calories = calcCalories(weight, steps);
 
         System.out.println("Counted " + steps + " steps which burns " + calories + " calories.");
         System.out.println("Average weight " + weight);
+
+        lastSteps = steps;
+        lastCals = calories;
 
         return calories;
 
@@ -112,7 +124,7 @@ public class CalorieTask extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer calsBurned) {
-        int currentCalCount = Integer.parseInt(destination.getText().toString());
+        int currentCalCount = 0;
         currentCalCount = -calsBurned;
         FoodModel model = new FoodModel(mClient.getContext());
         try {

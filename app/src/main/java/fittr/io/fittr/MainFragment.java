@@ -103,17 +103,19 @@ public class MainFragment extends Fragment {
             try {
 
                 model.open();
-                items = model.getFoodsAtDate(Calendar.getInstance());
+                items = model.getFoodsAtDate(Util.now());
+                int count = mealsDataAdapter.getCount();
                 mealsDataAdapter.clear();
                 mealsDataAdapter.addAll(items);
                 mealsDataAdapter.notifyDataSetChanged();
+                count -= mealsDataAdapter.getCount();
 
                 //int calCount = model.getCalorieCountAtDate(Calendar.getInstance());
 
                 //netCaloriesValue.setText(calCount + "");
 
-                // count calories burned
-                ((MainActivity) getActivity()).updateCalories();
+                // update calories when necessary
+                ((MainActivity) getActivity()).updateCalories(count != 0);
 
                 System.out.println("Main fragment resuming");
                 model.close();
