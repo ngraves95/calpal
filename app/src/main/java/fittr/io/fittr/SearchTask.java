@@ -37,7 +37,7 @@ import com.wolfram.alpha.test.Main;
  */
 public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
 
-    private static final Pattern GRAMS_PATTERN = Pattern.compile("\\(?([0-9]+) [mk]?g\\)?$", Pattern.MULTILINE);
+    private static final Pattern GRAMS_PATTERN = Pattern.compile("\\(?([0-9]+) ([mk]?g)\\)?$", Pattern.MULTILINE);
     private static final Pattern CALORIES_PATTERN = Pattern.compile("total calories\\s+([0-9]+)");
     private Button adder;
     private ListView destination;
@@ -137,6 +137,9 @@ public class SearchTask extends AsyncTask<String, Integer, SearchResult> {
                                         if (gramMatcher.find() && calsMatcher.find()) {
                                             System.out.println(gramMatcher.group(1));
                                             grams = Integer.parseInt(gramMatcher.group(1));
+                                            String units = gramMatcher.group(2);
+                                            if (units.equals("mg")) { grams /= 1000; }
+                                            else if (units.equals("kg")) { grams *= 1000; }
                                             System.out.println("Grams: " + grams.toString());
                                             calories = Integer.parseInt(calsMatcher.group(1));
                                             System.out.println("Calories: " + calories.toString());
